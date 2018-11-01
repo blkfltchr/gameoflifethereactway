@@ -35,3 +35,15 @@
   background: #80F103;
 }
 
+/* Modal styles */
+
+.ModalButton {
+  position: absolute;;
+  top:0;
+  right:0;
+  z-index:300;
+}
+
+.ModalStyles {
+  max-width: 70vw !important;
+}

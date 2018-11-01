@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
-import Grid from './Grid'
+import Grid from './Grid';
+import AboutModal from './Modal';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <header>
+          <AboutModal />
           <img src={logo} alt="logo" className="App-header"/>
           <p><b>About the game</b></p>
           <p className="App-header">
