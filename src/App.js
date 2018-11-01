@@ -17,7 +17,7 @@ class App extends Component {
           </p>
         </header>
           <p><b>The rules</b></p>
-          <ol style={{textAlign: 'left', margin: '0'}}>
+          <ol style={{textAlign: 'left', margin: '0 0 20px 0'}}>
             <li>Any live cell with fewer than two live neighbors dies, as if by underpopulation.</li>
             <li>Any live cell with two or three live neighbors lives on to the next generation.</li>
             <li>Any live cell with more than three live neighbors dies, as if by overpopulation.</li>

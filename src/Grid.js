@@ -3,14 +3,12 @@ import './App.css';
 import Cell from './Cell'
 
 class Grid extends React.Component {
-  constructor() {
-    super();
-  }
   state = {
     cells: [],
     grid: [],
     generation: 0,
     interval: 200,
+    speed: '1x',
     isRunning: false,
     rows: 18,
     columns: 33
@@ -21,7 +19,7 @@ class Grid extends React.Component {
     for (let y = 0; y < this.state.rows; y++) {
       grid[y] = [];
       for (let x = 0; x < this.state.columns; x++) {
-        grid[y][x] = undefined;
+        grid[y][x] = false;
       }
     }
     this.setState({grid});
@@ -48,7 +46,7 @@ class Grid extends React.Component {
         }
       }
     }
-    return cells;
+    this.setState({cells});
   }
 
   handleClick = (e) => {
@@ -57,38 +55,52 @@ class Grid extends React.Component {
     const x = Math.floor((e.pageX - elementOffset.x) / 20);
     const y = Math.floor((e.pageY - elementOffset.y) / 20);
     this.state.grid[y][x] = !this.state.grid[y][x];
-    this.setState({ cells: this.fillCells() });
+    this.fillCells();
     }
   }
 
   nextIteration = () => {
 
-    let firstBuffer = this.state.grid; // grid
-    let secondBuffer = this.state.grid.slice(0); // grid copy
+    let firstBuffer = this.state.grid.slice(0); // grid
+    let secondBuffer = new Array(this.state.rows);
+                        for (let i = 0; i < secondBuffer.length; i++) {
+                          secondBuffer[i] = (new Array(this.state.columns)).fill(false)
+                        }; // grid copy
 
-    for (let x = 0; x < this.state.rows; x++) { // loop thru rows
-		  for (let y = 0; y < this.state.columns; y++) { // loop thru columns
+    for (let x = 0; x < this.state.columns; x++) { // loop thru rows
+		  for (let y = 0; y < this.state.rows; y++) { // loop thru columns
 		    let neighbours = 0; // initialize neighbours
 
-          if (x > 0) if (firstBuffer[x-1][y]) neighbours++; // left
-          if (x > 0 && y < this.state.columns - 1) if (firstBuffer[x-1][y+1]) neighbours++; // diagonal up and left
-          if (y < this.state.columns - 1) if (firstBuffer[x][y+1]) neighbours++; // up
-          if (x < this.state.rows - 1 && y < this.state.columns - 1) if (firstBuffer[x+1][y+1]) neighbours++; // diagonal up and right
-          if (x < this.state.rows - 1) if (firstBuffer[x+1][y]) neighbours++; // right
-          if (x < this.state.rows - 1 && y > 0) if (firstBuffer[x+1][y-1]) neighbours++; // diagonal down and right
-          if (y > 0) if (firstBuffer[x][y-1]) neighbours++; // down
-          if (x > 0 && y > 0) if (firstBuffer[x-1][y-1]) neighbours++; // diagonal down left
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            if (x + dx >= 0 && x + dx < this.state.columns) {
+              if (y + dy >= 0 && y + dy < this.state.rows) {
+                if (firstBuffer[y][x]) {
+                }
+                if (firstBuffer[y + dy][x + dx] && (dx!== dy || dy !== 0)) {
+                  neighbours++;
+                }
+              }
+            }
+          }
+        }
 
-		    if (firstBuffer[x][y] && (neighbours < 2 || neighbours > 3)) secondBuffer[x][y] = false; // if less than 2 neighbours or more than three neighbours, it dies
-		    if (!firstBuffer[x][y] && neighbours === 3) secondBuffer[x][y] = true; // if exactly 3 neighbours, it's born
+		    if (firstBuffer[y][x]) {
+          if (neighbours >= 2 && neighbours <= 3) {
+            secondBuffer[y][x] = true;
+          }
+        } // if less than 2 neighbours or more than three neighbours, it dies
+		    if (!firstBuffer[y][x]) {
+          if (neighbours === 3) {
+            secondBuffer[y][x] = true; // if exactly 3 neighbours, it's born
+          }
+        } 
 		  }
 		}
-
     this.setState({ 
-      cells: this.fillCells(secondBuffer), // fill cells with second buffer
-      generation: this.state.generation + 1 }) // increase generations
+      grid: secondBuffer, // fill cells with second buffer
+      generation: this.state.generation + 1 }, this.fillCells ) // increase generations
     }
-  
 
   playGame = () => {
     this.setState({ isRunning: true })
@@ -102,12 +114,14 @@ class Grid extends React.Component {
   }
 
   randomGame = () => {
-    for (let y = 0; y < this.state.rows; y++) {
-        for (let x = 0; x < this.state.columns; x++) {
-            this.state.grid[y][x] = (Math.random() < 0.33);
-        }
+    if (!this.state.isRunning) {
+      for (let y = 0; y < this.state.rows; y++) {
+          for (let x = 0; x < this.state.columns; x++) {
+              this.state.grid[y][x] = (Math.random() < 0.33);
+          }
+      }
+      this.fillCells();
     }
-    this.setState({ cells: this.fillCells() });
   }
 
   clearGame = () => { 
@@ -116,18 +130,17 @@ class Grid extends React.Component {
   }
 
   fast = () => {
-      this.setState({ interval: 100});
+      this.setState({ interval: 100, speed: '2x'});
   }
 
   slow = () => {
-      this.setState({ interval: 400});
+      this.setState({ interval: 400, speed: '0.5x'});
   }
 
   render() {
-    console.log(this.state.interval);
     return (
       <div>
-        <p>Generations: {this.state.generation}</p>
+        <p>Generations: {this.state.generation} Speed: {this.state.speed}</p>
         <div className="Grid"
         onClick={this.handleClick}
         ref={(node) => { this.element = node; }}>
