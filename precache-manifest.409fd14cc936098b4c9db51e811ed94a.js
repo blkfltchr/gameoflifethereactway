@@ -8,15 +8,15 @@ self.__precacheManifest = [
     "url": "/gameoflifethereactway/static/js/runtime~main.1221a57c.js"
   },
   {
-    "revision": "eaa62f69a0c4b496d1a8",
-    "url": "/gameoflifethereactway/static/js/main.eaa62f69.chunk.js"
+    "revision": "0570b7a4d5ca46d61733",
+    "url": "/gameoflifethereactway/static/js/main.0570b7a4.chunk.js"
   },
   {
     "revision": "c53b121f43747d921ae8",
     "url": "/gameoflifethereactway/static/js/1.c53b121f.chunk.js"
   },
   {
-    "revision": "eaa62f69a0c4b496d1a8",
+    "revision": "0570b7a4d5ca46d61733",
     "url": "/gameoflifethereactway/static/css/main.52955e7f.chunk.css"
   },
   {
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/gameoflifethereactway/static/css/1.0fef9d77.chunk.css"
   },
   {
-    "revision": "c13d64bfd11de379e63512674dabed1f",
+    "revision": "1301a876057d977ced1d095db4d6f7f5",
     "url": "/gameoflifethereactway/index.html"
   }
 ];
